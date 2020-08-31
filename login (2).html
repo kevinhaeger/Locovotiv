@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="stylesheet" href="dashboard.css">
+    <title>UDS Locovotiv</title>
+	
+	<!-- bootstrap -->
+	<link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css'>
+	
+	<!-- jQuery -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.js"></script>
+  </head>
+  
+  <body>
+    <header>
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+      <a class="navbar-brand" href="#">Locovotiv</a>
+      <button class="navbar-toggler d-lg-none" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+        
+        
+      </div>
+    </nav>
+  </header>
+
+  <div class="container-fluid">
+    <div class="row">
+     
+
+        <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+            <div class="card card-signin my-5">
+              <div class="card-body">
+                <h5 class="card-title text-center">Sign In</h5>
+                <h5 class = "card-title-small text-center">User</h2>
+                <form class="form-signin">
+                  <div class="form-label-group">
+                    <input type="email" onfocus="this.placeholder = ''" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
+                    
+                  </div>
+
+                  <h5 class = "card-title-small text-center">Password</h2>
+    
+                  <div class="form-label-group">
+                    <input type="password" onfocus="this.placeholder = ''" id="inputPassword" class="form-control" placeholder="Password" required>
+                    <p id='wrongpw' class='text-center text-danger'></p>
+                  </div>
+                  <div class="custom-control custom-checkbox mb-3">
+                    <input type="checkbox" class="custom-control-input" id="customCheck1">
+                    <label class="custom-control-label" for="customCheck1">Remember password</label>
+                  </div>		  
+                  <button id='signin' class="btn btn-lg btn-primary btn-block text-uppercase" type='button'>Sign in</button>
+                  <hr class="my-4">
+                 </form>
+              </div>
+            </div>
+
+        
+        </div>
+      </main>
+    </div>
+  </div>
+  </body>
+  <script src="renderer.js"></script>
+  <script>
+	/* when sign in button is clicked */
+	$('#signin').on('click', function () {
+		let email = $('#inputEmail').val();
+		let password = $('#inputPassword').val();
+		let data = JSON.stringify({email: email, password: password});
+		
+		/* make Post request to api*/
+		$.ajax({
+			method: 'POST',
+			url: 'https://api.locovotiv.com/AdminLogin',
+			header: {'Content-Type': 'application/json'},
+			data: data,
+			
+			/* request is only successful if the credentials are correct */
+			success: function (data, textStatus) {
+				let loginStatus = data.status;
+				let token = data.token;
+				
+				if (loginStatus == 'success') {
+					window.location.replace('index.html');
+				} else {
+					$('#wrongpw').text('Incorrect Credentials');
+				}
+			},
+			
+			/* request fails if the credentials are incorrect */
+			error: function (jqXHR, textStatus, httpError) {
+				$('#wrongpw').text('Incorrect Credentials');
+			}
+		});
+	});
+  </script>
+</html>
